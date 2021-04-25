@@ -49,11 +49,50 @@
                                                 label="操作"
                                                 min-width="30%">
                                             <template slot-scope="scope">
-                                                <el-button type="primary" @click="addModelToSceneById(scope.row)">添加
+                                                <el-button type="primary" @click="selectModelToSceneById(scope.row)">添加
                                                 </el-button>
                                             </template>
                                         </el-table-column>
                                     </el-table>
+                                    <el-dialog
+                                            title="模型设置"
+                                            :visible.sync="dialogVisible"
+                                            width="30%"
+                                            center
+                                            :destroy-on-close="true"
+                                            :close-on-click-modal="false">
+                                        <div class="set_box"
+                                             v-loading="loading"
+                                             element-loading-text="拼命加载中">
+                                            <div class="position_box">
+                                                <span style="font-weight: bold">位置</span>
+                                                <span style="margin-left: 5%">X：</span>
+                                                <el-input style="width: 15%" v-model="position.x"></el-input>
+                                                <span style="margin-left: 10%">Y：</span>
+                                                <el-input style="width: 15%" v-model="position.y"></el-input>
+                                                <span style="margin-left: 10%">Z：</span>
+                                                <el-input style="width: 15%" v-model="position.z"></el-input>
+                                            </div>
+                                            <div class="scale_box">
+                                                <span style="font-weight: bold">缩放</span>
+                                                <span style="margin-left: 5%">X：</span>
+                                                <el-input style="width: 15%" v-model="scale.x"></el-input>
+                                                <span style="margin-left: 10%">Y：</span>
+                                                <el-input style="width: 15%" v-model="scale.y"></el-input>
+                                                <span style="margin-left: 10%">Z：</span>
+                                                <el-input style="width: 15%" v-model="scale.z"></el-input>
+                                            </div>
+                                            <!--                                            <div class="color_box">-->
+                                            <!--                                                <span style="font-weight: bold">颜色</span>-->
+                                            <!--                                                <el-color-picker v-model="color" style="margin-left: 10%"></el-color-picker>-->
+                                            <!--                                            </div>-->
+                                        </div>
+                                        <span slot="footer" class="dialog-footer">
+                                            <el-button @click="cleanData">取 消</el-button>
+                                            <el-button type="primary"
+                                                       @click="loadFbxModel(baseUrl + modelName + '/',modelUrls)">确 定</el-button>
+                                        </span>
+                                    </el-dialog>
                                     <div class="page_box">
                                         <el-pagination
                                                 @current-change="handleCurrentChange"
@@ -77,7 +116,7 @@
 </template>
 
 <script>
-    import * as THREE from "three";
+    import * as THREE from 'three';
     import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
     import {FBXLoader} from "three/examples/jsm/loaders/FBXLoader.js";
 
@@ -102,8 +141,23 @@
                 renderer: '',
                 controls: '',
                 light: '',
-                baseUrl: '/public/model/modelFile/myABB/',
-                modelUrls: ['base', 'link1', 'link2', 'link3', 'link4', 'link5', 'link6']
+                baseUrl: '/model/modelFile/',
+                modelUrls: ['base', 'link1', 'link2', 'link3', 'link4', 'link5', 'link6'],
+
+                //模型添加设置
+                dialogVisible: false,
+                loading: false,
+                modelName: '',
+                position: {
+                    x: 0,
+                    y: 0,
+                    z: 0,
+                },
+                scale: {
+                    x: 1,
+                    y: 1,
+                    z: 1,
+                },
             }
         },
         methods: {
@@ -134,10 +188,10 @@
                 console.log(this.showModels);
             },
             //添加模型
-            addModelToSceneById(row) {
+            selectModelToSceneById(row) {
                 console.log(row, row.id);
-                // this.loadFbxModel(this.baseUrl, this.modelUrls);
-                this.loadDemo();
+                this.modelName = row.modelName;
+                this.dialogVisible = true;
             },
             //3D渲染
             initScene() {
@@ -166,7 +220,6 @@
                 this.controls.dampingFactor = 0.25;//动态阻尼系数
                 this.controls.target.set(0, 0, 0);
                 this.controls.zoomSpeed = 2;
-                this.controls.update();
                 //初始化网格
                 let grid = new THREE.GridHelper(2000, 100);
                 grid.material.opacity = 0.5;
@@ -177,33 +230,55 @@
                 this.scene.add(axes);
             },
             animate() {
+                this.controls.update();
                 this.renderer.render(this.scene, this.camera);
                 requestAnimationFrame(this.animate);
             },
-            //加载模型
-            loadDemo(){
-                let fbxLoader = new FBXLoader;
-                fbxLoader.load('/public/model/modelFile/base.fbx',fbx =>{
-                    this.scene.add(fbx.scene);
-                })
-            },
-            loadFbxModel(baseUrl, modelUrls) {
-                console.log(baseUrl);
-                console.log(modelUrls);
+            // 加载模型
+            loadFbxModel(baseUrl, modelUrl) {
+                this.loading = true;
+                let model = {};
                 let fbxLoader = new FBXLoader;
                 fbxLoader.setPath(baseUrl);
-                this.modelUrls.forEach(e => {
-                    console.log(e);
-                    fbxLoader.load(e + '.fbx', fbx => {
-                            this.scene.add(fbx);
-                            console.log(fbx);
-                        }, onProgress => {
-                            console.log('模型加载中');
-                        }, onerror => {
-                            console.log('模型加载出错');
-                        }
-                    )
+                new Promise(resolve => {
+                    modelUrl.forEach(a => {
+                        fbxLoader.load(a + '.fbx', fbx => {
+                                console.log(a);
+                                // console.log(fbx);
+                                model[a] = fbx;
+                                // this.scene.add(fbx);
+                                if (Object.keys(model).length !== modelUrl.length) return;
+                                resolve(model);
+                            }
+                        )
+
+                    })
+                }).then(model => {
+                    this.setModel(model);
                 })
+
+            },
+            //配置模型
+            setModel(model) {
+                for (let i = 0; i < this.modelUrls.length - 1; i++) {
+                    model[this.modelUrls[i]].add(model[this.modelUrls[i + 1]]);
+                }
+                console.log(model);
+                model[this.modelUrls[0]].position.set(this.position.x, this.position.y, this.position.z);
+                model[this.modelUrls[0]].scale.set(this.scale.x, this.scale.y, this.scale.z);
+                this.scene.add(model[this.modelUrls[0]]);
+                this.cleanData();
+            },
+            //清除模型数据
+            cleanData() {
+                this.position.x = 0;
+                this.position.y = 0;
+                this.position.z = 0;
+                this.scale.x = 1;
+                this.scale.y = 1;
+                this.scale.z = 1;
+                this.loading = false;
+                this.dialogVisible = false
             },
             //渲染窗口自适应
             resize() {
@@ -269,6 +344,22 @@
         margin-top: 10px;
     }
 
+    /*模型添加参数设置*/
+    .set_box {
+        margin-top: -20px;
+    }
+
+    .position_box {
+        margin-top: 10px;
+    }
+
+    .scale_box {
+        margin-top: 10px;
+    }
+
+    .color_box {
+        margin-top: 10px;
+    }
 
     /*渲染空间*/
     .space {

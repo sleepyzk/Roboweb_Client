@@ -131,7 +131,7 @@
                                         <div class="detail_info">
                                             <span>下载次数：</span><span>{{modelDetail.downloadTimes}}</span>
                                         </div>
-                                        <el-button type="primary" @click="preview">预览</el-button>
+                                        <!--                                        <el-button type="primary" @click="preview">预览</el-button>-->
                                         <el-button class="detail_button" type="success"
                                                    @click="downloadModel(modelDetail.modelName)">下载
                                         </el-button>
@@ -248,6 +248,12 @@
                     console.log(this.modelDetail);
                 })
                 this.detailBox = true;
+                this.$nextTick(() => {
+                    let dom = document.getElementById('container');
+                    console.log(dom)
+                    this.initModel(dom);
+                    this.animate();
+                })
             },
             //预览模型
             preview() {
@@ -255,9 +261,7 @@
                 this.animate();
             },
             //初始化场景预览模型
-            initModel() {
-                //获取dom节点
-                let container = document.getElementById('container');
+            initModel(container) {
                 //初始化场景
                 this.scene = new THREE.Scene();
                 this.scene.add(new THREE.AmbientLight(0x999999));//添加环境光
@@ -284,9 +288,6 @@
                 this.controls.update();
                 //加载模型
                 // this.loadModel();
-                //渲染
-                // this.animate();
-                console.log(container);
             },
             //模型加载器
             loadModel() {
