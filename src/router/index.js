@@ -14,6 +14,10 @@ const routes = [
         meta: {title: '登录'}
     },
     {
+        path: '/openScene',
+        component: () => import('../views/openScene'),
+    },
+    {
         path: '/',
         component: () => import('../components/Main'),
         meta: {title: '主页'},

@@ -24,7 +24,7 @@
                     <!--                    </el-col>-->
                     <el-col class="nav_upload" :xs="8" :sm="5" :lg="3">
                         <el-button type="success" style="width: 100%" @click="toCreateScene"><i
-                                class="el-icon-upload"></i> 创建场景
+                                class="el-icon-camera-solid"></i> 创建场景
                         </el-button>
                     </el-col>
                 </el-row>
@@ -35,14 +35,17 @@
                             :key="item.index">
                         <el-card :body-style="{ padding: '0px' }" shadow="hover">
                             <el-image
-                                    :src="'http://model.3dmomoda.com/models/b407539f4a734223bec484e80d9d7058/1/screenshot.jpg'"
+                                    :src="'/scene/sceneCover/'+ item.sceneName +'.jpeg'"
                                     class="image" @click=""></el-image>
                             <div class="card_sub">
                                 <div class="sub_title">
                                     <span>{{item.sceneName}}</span>
+                                    <div style="font-size: 12px;margin-top: 2px;color: darkgrey"><span>创建时间：{{item.createTime}}</span>
+                                    </div>
                                 </div>
                                 <div class="sub_button">
-                                    <el-button size="mini" type="success" @click="">下载
+                                    <el-button size="mini" type="primary" @click="">打开</el-button>
+                                    <el-button size="mini" type="success" @click="editScene(item.sceneName)">编辑
                                     </el-button>
                                 </div>
                             </div>
@@ -87,6 +90,12 @@
             //关键字搜索
             searchByKeyword(keyword) {
                 console.log('搜索关键字' + keyword);
+                this.$http.get('http://localhost:8080/scene/find', {params: {keyword: keyword}}).then(res => {
+                    this.sceneList = res.data.data;
+                    console.log(this.sceneList);
+                    this.total = this.sceneList.length
+                    this.updateShowScene();
+                })
             },
 
             //每页显示记录条数改变
@@ -97,19 +106,24 @@
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
                 this.currentPage = val;
-                this.updateShowModel();
+                this.updateShowScene();
             },
             //从总记录中选出符合分页条件数据
-            updateShowModel() {
+            updateShowScene() {
                 let startPage = (this.currentPage - 1) * this.showNum;
                 let endPage = startPage + this.showNum;
                 this.showScene = this.sceneList.slice(startPage, endPage);
-                console.log(this.showScene);
+                // console.log(this.showScene);
             },
 
             //新建场景
-            toCreateScene(){
-                this.$router.push('/scene')
+            toCreateScene() {
+                this.$router.push('/scene');
+            },
+            //编辑场景
+            editScene(sceneName) {
+                this.bus.$emit('edit', sceneName);
+                this.$router.push('/scene');
             }
         },
         mounted() {
@@ -175,17 +189,17 @@
     }
 
     .card_sub {
-        margin-top: 10px;
+        margin-top: 5px;
     }
 
     .sub_title {
-        padding: 10px;
+        padding: 5px 10px 10px 10px;
         float: left;
         font-size: 15px;
     }
 
     .sub_button {
-        padding: 10px;
+        padding: 10px 10px 15px 10px;
         float: right;
     }
 

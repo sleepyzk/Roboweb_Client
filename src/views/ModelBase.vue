@@ -35,7 +35,7 @@
                                 <el-form-item label="模型类别" class="form_item" prop="type">
                                     <el-select v-model="uploadModelForm.type" placeholder="请选择模型类别">
                                         <el-option label="机械臂" value="机械臂"></el-option>
-                                        <el-option label="传送带" value="传动带"></el-option>
+                                        <el-option label="传送带" value="传送带"></el-option>
                                         <el-option label="机床" value="机床"></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -44,6 +44,7 @@
                                                placeholder="请选择模型文件格式">
                                         <el-option label="fbx" value="fbx"></el-option>
                                         <el-option label="gltf" value="gltf"></el-option>
+                                        <el-option label="stl" value="stl"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item prop="fileList" label="模型上传" class="form_item">
@@ -52,7 +53,7 @@
                                             ref="modelUpload"
                                             action="#"
                                             multiple
-                                            accept=".fbx,.gltf"
+                                            accept=".fbx,.gltf,.stl"
                                             :file-list="uploadModelForm.fileList"
                                             :on-change="modelFileChange"
                                             :on-remove="modelFileRemove"
@@ -233,7 +234,7 @@
             searchByKeyWord(key) {
                 console.log('搜索关键字：' + key);
                 this.$http.get('http://localhost:8080/model/find', {params: {keyword: key}}).then(res => {
-                    console.log(res.data.data);
+                    // console.log(res.data.data);
                     this.modelList = res.data.data;
                     console.log(this.modelList);
                     this.total = this.modelList.length;
@@ -369,6 +370,7 @@
                                     type: 'success',
                                     message: '上传成功'
                                 })
+                                this.searchByKeyWord('');
                             } else {
                                 this.$message({
                                     type: 'error',
@@ -505,17 +507,17 @@
     }
 
     .card_sub {
-        margin-top: 10px;
+        margin-top: 5px;
     }
 
     .sub_title {
-        padding: 10px;
+        padding: 10px 10px 15px 10px;
         float: left;
         font-size: 15px;
     }
 
     .sub_button {
-        padding: 10px;
+        padding: 10px 10px 15px 10px;
         float: right;
     }
 
