@@ -24,22 +24,32 @@ export default {
             },
             {
                 icon: 'el-icon-s-cooperation',
-                index: 'model',
+                index: 'modelPage',
                 title: '仿真模型库',
+                subs: [
+                    {index: 'model', title: '工业模型库', icon: 'el-icon-menu'},
+                    {index: 'simulation', title: '运动仿真', icon: 'el-icon-s-operation'},
+                ]
             },
             {
                 icon: 'el-icon-picture',
-                index: 'visual',
-                title: '生产可视化'
+                index: 'scenePage',
+                title: '生产可视化',
+                subs: [
+                    {index: 'visual', title: '工业场景库', icon: 'el-icon-menu'},
+                    {index: 'scene', title: '场景编辑器', icon: 'el-icon-edit'},
+                    {index: 'dataScreen', title: '数据可视化', icon: 'el-icon-s-data'},
+                    {index: 'digitalTwin', title: '数字孪生产线', icon: 'el-icon-s-platform'},
+                ]
             },
             {
-                icon: 'el-icon-s-data',
+                icon: 'el-icon-s-marketing',
                 index: 'analysis',
                 title: '数据分析'
             },
             {
                 icon: 'el-icon-s-tools',
-                index: '',
+                index: 'systemPage',
                 title: '系统功能',
                 subs: [
                     {index: 'admin', title: '用户管理', icon: 'el-icon-user-solid'},

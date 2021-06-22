@@ -18,7 +18,7 @@
                 <el-dropdown trigger="click" @command="changeLang">
                     <span class="el-dropdown-link">
                         <el-tooltip effect="dark" :content="$t('com.switch')">
-                            <i class="el-icon-tickets"></i>
+                            <i class="el-icon-location" style="font-size: 22px;margin-bottom: 3px"></i>
                         </el-tooltip>
                     </span>
                     <el-dropdown-menu slot="dropdown">

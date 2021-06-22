@@ -18,6 +18,11 @@ const routes = [
         component: () => import('../views/openScene'),
     },
     {
+        path: '/dataScreen',
+        component: () => import('../views/DataScreen'),
+        meta: {title: '数据可视化'}
+    },
+    {
         path: '/',
         component: () => import('../components/Main'),
         meta: {title: '主页'},
@@ -33,9 +38,24 @@ const routes = [
                 meta: {title: '仿真模型库'}
             },
             {
+                path: '/simulation',
+                component: () => import('../views/Simulation'),
+                meta: {title: '运动仿真'}
+            },
+            {
                 path: '/visual',
                 component: () => import('../views/Visual'),
-                meta: {title: '生产可视化'}
+                meta: {title: '工业场景库'}
+            },
+            {
+                path: '/scene',
+                component: () => import('../views/CreateScene'),
+                meta: {title: '场景编辑器'}
+            },
+            {
+                path: '/digitalTwin',
+                component: () => import('../views/DigitalTwin'),
+                meta: {title: '数字孪生产线'}
             },
             {
                 path: '/analysis',
@@ -51,11 +71,6 @@ const routes = [
                 path: '/log',
                 component: () => import('../views/SystemLog'),
                 meta: {title: '系统日志'}
-            },
-            {
-                path: '/scene',
-                component: () => import('../views/CreateScene'),
-                meta: {title: '创建场景'}
             }
         ]
     },

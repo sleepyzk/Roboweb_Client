@@ -24,22 +24,32 @@ export default {
             },
             {
                 icon: 'el-icon-s-cooperation',
-                index: 'model',
-                title: 'ModelBase',
+                index: 'modelPage',
+                title: 'ModelSimulation',
+                subs: [
+                    {index: 'model', title: 'ModelBase', icon: 'el-icon-menu'},
+                    {index: 'simulation', title: 'MotionSimulation', icon: 'el-icon-s-operation'},
+                ]
             },
             {
                 icon: 'el-icon-picture',
-                index: 'visual',
-                title: 'Visualization'
+                index: 'scenePage',
+                title: 'Visualization',
+                subs: [
+                    {index: 'visual', title: 'SceneBase', icon: 'el-icon-menu'},
+                    {index: 'scene', title: 'SceneEditor', icon: 'el-icon-edit'},
+                    {index: 'dataScreen', title: 'DataScreen', icon: 'el-icon-s-data'},
+                    {index: 'digitalTwin', title: 'DigitalLine', icon: 'el-icon-s-platform'},
+                ]
             },
             {
-                icon: 'el-icon-s-data',
+                icon: 'el-icon-s-marketing',
                 index: 'analysis',
                 title: 'Analysis'
             },
             {
                 icon: 'el-icon-s-tools',
-                index: '',
+                index: 'systemPage',
                 title: 'System',
                 subs: [
                     {index: 'admin', title: 'Users', icon: 'el-icon-user-solid'},

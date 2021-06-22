@@ -24,7 +24,7 @@
                     <!--                    </el-col>-->
                     <el-col class="nav_upload" :xs="8" :sm="5" :lg="3">
                         <el-button type="success" style="width: 100%" @click="toCreateScene"><i
-                                class="el-icon-camera-solid"></i> 创建场景
+                                class="el-icon-edit"></i> 创建场景
                         </el-button>
                     </el-col>
                 </el-row>
@@ -36,7 +36,7 @@
                         <el-card :body-style="{ padding: '0px' }" shadow="hover">
                             <el-image
                                     :src="'/scene/sceneCover/'+ item.sceneName +'.jpeg'"
-                                    class="image" @click=""></el-image>
+                                    class="image" @click="openScene(item.sceneName)"></el-image>
                             <div class="card_sub">
                                 <div class="sub_title">
                                     <span>{{item.sceneName}}</span>
@@ -44,7 +44,8 @@
                                     </div>
                                 </div>
                                 <div class="sub_button">
-                                    <el-button size="mini" type="primary" @click="">打开</el-button>
+                                    <el-button size="mini" type="primary" @click="openScene(item.sceneName)">打开
+                                    </el-button>
                                     <el-button size="mini" type="success" @click="editScene(item.sceneName)">编辑
                                     </el-button>
                                 </div>
@@ -120,11 +121,18 @@
             toCreateScene() {
                 this.$router.push('/scene');
             },
+            //打开场景
+            openScene(sceneName) {
+                let routeData = this.$router.resolve({path: '/openScene', query: {sceneName: sceneName}})
+                window.open(routeData.href, '_blank')
+            },
             //编辑场景
             editScene(sceneName) {
                 this.bus.$emit('edit', sceneName);
                 this.$router.push('/scene');
+                // this.$router.push({path: '/scene', query: {sceneName: sceneName}});
             }
+
         },
         mounted() {
             this.searchByKeyword('');

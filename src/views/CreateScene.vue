@@ -22,6 +22,7 @@
                                                     <el-option
                                                             v-for="item in backOption"
                                                             :label="item.label"
+                                                            :key="item.value"
                                                             :value="item.value">
                                                     </el-option>
                                                 </el-select>
@@ -32,6 +33,7 @@
                                                     <el-option
                                                             v-for="item in groundOption"
                                                             :label="item.label"
+                                                            :key="item.value"
                                                             :value="item.value">
                                                     </el-option>
                                                 </el-select>
@@ -101,7 +103,7 @@
                                         <div v-loading="sceneLoading"
                                              element-loading-text="拼命保存中"
                                              element-loading-spinner="el-icon-loading">
-                                        <el-input v-model="sceneName" placeholder="场景名"></el-input>
+                                            <el-input v-model="sceneName" placeholder="场景名"></el-input>
                                         </div>
                                         <span slot="footer" class="dialog-footer">
                                             <el-button @click="sceneNameDialog = false">取 消</el-button>
@@ -324,7 +326,8 @@
                     {
                         value: 3,
                         label: '贴图',
-                    }],
+                    }
+                ],
                 groundOption: [
                     {
                         value: 1,
@@ -725,7 +728,7 @@
             //初始化拖拽控制器
             initDragControls(model) {
                 let self = this;
-
+                // self.transformControls.detach();
                 self.dragControls = new DragControls(self.objects, self.camera, self.renderer.domElement);
                 // 鼠标略过事件
                 self.dragControls.addEventListener('hoveron', function (event) {
@@ -851,7 +854,13 @@
                 this.renderer.setSize(container.clientWidth, container.clientHeight);
                 this.camera.aspect = container.clientWidth / container.clientHeight;
                 this.camera.updateProjectionMatrix();
+            },
+            getSceneUrl() {
+                this.loadSceneUrl = this.$route.query.sceneName;
             }
+        },
+        created() {
+            // this.getSceneUrl();
         },
         mounted() {
             this.loadScene();
